@@ -50,7 +50,6 @@ selected_platforms = st.sidebar.multiselect(
     default=all_platforms 
 )
 
-# Apply Filter
 if not selected_platforms:
     st.warning("Please select at least one platform.")
     st.stop()
@@ -75,15 +74,15 @@ col1, col2, col3, col4 = st.columns(4)
 total_rev = df_sales['total_revenue'].sum()
 col1.metric("💰 Total Revenue", f"${total_rev:,.0f}", delta="12% vs last month")
 
-# KPI 2: Transactions (Safe Fix using row count)
+# KPI 2: Transactions (Safe Fix for missing 'units_sold')
 transaction_count = len(df_sales) 
 col2.metric("📦 Transactions", f"{transaction_count}", delta="Live")
 
-# KPI 3: Social Buzz (Uses Filtered Data)
+# KPI 3: Social Buzz
 buzz_count = len(filtered_social)
 col3.metric("🐦 Mentions (Filtered)", f"{buzz_count}", delta="Live")
 
-# KPI 4: Sentiment (Uses Filtered Data)
+# KPI 4: Sentiment
 avg_sent = filtered_social['sentiment_score'].mean()
 sent_delta = "High" if avg_sent > 0.5 else "Neutral"
 col4.metric("❤️ Brand Sentiment", f"{avg_sent:.2f}", delta=sent_delta)
@@ -91,62 +90,45 @@ col4.metric("❤️ Brand Sentiment", f"{avg_sent:.2f}", delta=sent_delta)
 # --- 5. TABS LAYOUT ---
 tab1, tab2 = st.tabs(["📊 Executive Overview", "🔎 Data Deep Dive"])
 
-# TAB 1: VISUALIZATIONS
 with tab1:
     c1, c2 = st.columns([2, 1]) 
 
     with c1:
         st.subheader("📈 Revenue Trajectory")
         daily_sales = df_sales.groupby(df_sales['date'].dt.date)['total_revenue'].sum().reset_index()
-        
         fig_sales = px.area(daily_sales, x='date', y='total_revenue', 
                             template="plotly_dark",
                             color_discrete_sequence=['#F63366'])
-        
         fig_sales.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", yaxis_title="Revenue ($)")
         st.plotly_chart(fig_sales, use_container_width=True)
 
     with c2:
         st.subheader("🌍 Platform Split")
-        
-        # Donut Chart - CORRECTED CODE HERE
         platform_counts = filtered_social['platform'].value_counts().reset_index()
         platform_counts.columns = ['platform', 'count']
-        
-        # Use px.pie with hole=0.6 instead of px.donut
-        fig_pie = px.pie(platform_counts, values='count', names='platform', hole=0.6,
+        fig_pie = px.donut(platform_counts, values='count', names='platform', hole=0.6,
                          template="plotly_dark",
                          color_discrete_sequence=px.colors.sequential.RdBu)
-        
         fig_pie.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig_pie, use_container_width=True)
 
-# TAB 2: RAW DATA & PROGRESS BARS
 with tab2:
     st.subheader("🧠 Sentiment Analysis")
     col_left, col_right = st.columns(2)
-    
     with col_left:
-        # Histogram
         fig_hist = px.histogram(filtered_social, x="sentiment_score", nbins=20,
                                 title="Sentiment Distribution",
                                 template="plotly_dark",
                                 color_discrete_sequence=['#636EFA'])
         fig_hist.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig_hist, use_container_width=True)
-        
     with col_right:
         st.caption("Recent Mentions (With Sentiment Progress Bar)")
-        
         st.dataframe(
             filtered_social[['date', 'platform', 'content', 'sentiment_score']].sort_values(by='date', ascending=False),
             column_config={
                 "sentiment_score": st.column_config.ProgressColumn(
-                    "Sentiment Score",
-                    help="AI Confidence",
-                    format="%.2f",
-                    min_value=-1,
-                    max_value=1,
+                    "Sentiment Score", format="%.2f", min_value=-1, max_value=1,
                 ),
             },
             use_container_width=True,
