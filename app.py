@@ -39,7 +39,6 @@ except Exception as e:
 
 # --- 3. SIDEBAR FILTERS ---
 st.sidebar.title("⚡ TrendPulse")
-st.sidebar.image("https://cdn-icons-png.flaticon.com/512/1043/1043450.png", width=50)
 st.sidebar.header("⚙️ Dashboard Filters")
 
 # Filter by Platform
@@ -74,7 +73,7 @@ col1, col2, col3, col4 = st.columns(4)
 total_rev = df_sales['total_revenue'].sum()
 col1.metric("💰 Total Revenue", f"${total_rev:,.0f}", delta="12% vs last month")
 
-# KPI 2: Transactions (Safe Fix for missing 'units_sold')
+# KPI 2: Transactions
 transaction_count = len(df_sales) 
 col2.metric("📦 Transactions", f"{transaction_count}", delta="Live")
 
@@ -106,9 +105,12 @@ with tab1:
         st.subheader("🌍 Platform Split")
         platform_counts = filtered_social['platform'].value_counts().reset_index()
         platform_counts.columns = ['platform', 'count']
-        fig_pie = px.donut(platform_counts, values='count', names='platform', hole=0.6,
+        
+        # --- FIXED THIS LINE BELOW (Changed px.donut to px.pie) ---
+        fig_pie = px.pie(platform_counts, values='count', names='platform', hole=0.6,
                          template="plotly_dark",
                          color_discrete_sequence=px.colors.sequential.RdBu)
+        
         fig_pie.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig_pie, use_container_width=True)
 
