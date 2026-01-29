@@ -14,24 +14,10 @@ In the modern digital economy, brand reputation directly correlates with revenue
 **TrendPulse** solves this by ingesting cross-platform social signals, applying NLP-driven sentiment analysis, and correlating these metrics with transaction data. It transforms "Internet Noise" into actionable "Business Signals," enabling stakeholders to monitor Brand Health and ROI through a single pane of glass.
 
 ## 🚀 Live Deployment
-### [👉 Launch the Market Command Center](https://trendpulse-yourname.streamlit.app/)
+### [👉 Launch the Market Command Center](https://ht85kr9hvauxnnjaa8odye.streamlit.app/)
 
 ---
-
-## 🏗️ System Architecture & Data Pipeline
-
-This project moves beyond simple scripting to demonstrate a **Full-Stack Data Engineering** workflow:
-
-```mermaid
-graph LR
-    A[Raw Data Sources] -->|SQL Ingestion| B(ETL & Preprocessing)
-    B -->|Pandas & NLP| C{Sentiment Analysis Engine}
-    C -->|Structured Data| D[SQLite Database]
-    D -->|Query Optimization| E[Streamlit Application]
-    E -->|Visualization| F[Plotly Interactive Charts]
-    E -->|Reporting| G[Business Intelligence Layer]
-
-🌟 Key Features
+Key Features
 📊 1. Real-Time Market Correlation
 Instantaneously tracks Total Revenue, Transaction Volume, and Social Velocity.
 
@@ -50,42 +36,17 @@ Dynamic Visualizations:
 Revenue Trajectory: Area charts for spotting financial anomalies.
 
 Platform Split: Donut charts for demographic segmentation.
+---
 
-🗄️ Data Dictionary (Schema Design)
-The system relies on a relational SQLite database (trendpulse.db) optimized for read-heavy analytical queries.
+## 🏗️ System Architecture & Data Pipeline
 
-Table Name,Column,Type,Description
-sales,transaction_id,VARCHAR,Unique identifier for sales records.
-,date,DATETIME,Timestamp of the transaction.
-,total_revenue,FLOAT,Monetary value of the sale (USD).
-social_buzz,post_id,VARCHAR,Unique identifier for social posts.
-,platform,VARCHAR,"Source (Twitter, Instagram, Reddit)."
-,content,TEXT,Raw user-generated content (Unstructured).
-,sentiment_score,FLOAT,AI-computed polarity (-1.0 to +1.0).
+This project moves beyond simple scripting to demonstrate a **Full-Stack Data Engineering** workflow:
 
-
-⚡ Performance & Optimization
-To ensure the dashboard handles high data volume without latency, I implemented several engineering optimizations:
-
-Caching Strategy: Utilized st.cache_data decorators to memoize heavy SQL queries. This reduced data reload times by 40%, ensuring a seamless user experience during high-traffic filtering.
-
-Vectorized Operations: Replaced iterative loops with Pandas vectorization for sentiment scoring, improving processing speed by 100x compared to standard Python loops.
-
-CSS Injection: Minimized external asset loading by injecting custom CSS directly into the DOM for Dark Mode rendering.
-
-Component,Technology,Role
-Language,Python 3.9+,Core Logic & Data Manipulation
-Frontend,Streamlit,Web Application Framework
-Visualization,Plotly Express,Interactive & Responsive Charts
-Data Processing,"Pandas, NumPy",ETL & Vectorized Operations
-Database,SQLite / SQL,Relational Data Management
-Deployment,Streamlit Cloud,CI/CD & Hosting
-
-📂 Project Structure
-TrendPulse/
-├── .streamlit/          # UI Configuration (Custom Theme & CSS)
-├── app.py               # Main Application Entry Point
-├── db_setup.py          # Database Schema & Initialization
-├── trendpulse.db        # Relational Database (SQLite)
-├── requirements.txt     # Dependency Management
-└── README.md            # Project Documentation
+```mermaid
+graph LR
+    A[Raw Data Sources] -->|SQL Ingestion| B(ETL & Preprocessing)
+    B -->|Pandas & NLP| C{Sentiment Analysis Engine}
+    C -->|Structured Data| D[SQLite Database]
+    D -->|Query Optimization| E[Streamlit Application]
+    E -->|Visualization| F[Plotly Interactive Charts]
+    E -->|Reporting| G[Business Intelligence Layer]
